@@ -1,6 +1,7 @@
 import type { CollectionSlug, Config, JSONField } from 'payload'
 
 import { customEndpointHandler } from './endpoints/customEndpointHandler.js'
+import { validateIconValue } from './validation.js'
 
 export type CollectionConfigOptions = {
   /**
@@ -173,6 +174,13 @@ export const iconField = (
       },
     },
     required,
+    validate: (value, { req }) =>
+      validateIconValue(value, {
+        hasMany,
+        invalidMessage: req.t('validation:invalidInput'),
+        required,
+        requiredMessage: req.t('validation:required'),
+      }),
     jsonSchema: {
       fileMatch: ['payload-icon-picker://icon.json'],
       schema: hasMany

@@ -1,14 +1,22 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
-import { FieldDescription, FieldError, FieldLabel, useDocumentInfo, useField } from '@payloadcms/ui'
+import {
+  FieldDescription,
+  FieldError,
+  FieldLabel,
+  useDocumentInfo,
+  useField,
+  useTranslation,
+} from '@payloadcms/ui'
 import Fuse from 'fuse.js'
-import React, { useMemo, useRef } from 'react'
+import React, { useCallback, useMemo, useRef } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 
 import { DrawerMode } from './DrawerMode.js'
 import { DropdownMode } from './DropdownMode.js'
 import { useIconPack } from './IconPackContext.js'
+import { validateIconValue } from '../validation.js'
 
 export const IconPicker: React.FC<{
   closeOnSelect?: boolean
@@ -35,7 +43,18 @@ export const IconPicker: React.FC<{
   path,
   required = false,
 }) => {
-  const { setValue, showError, value } = useField<any>({ potentiallyStalePath: path })
+  const { t } = useTranslation()
+  const validate = useCallback(
+    (value: unknown) =>
+      validateIconValue(value, {
+        hasMany,
+        invalidMessage: t('validation:invalidInput'),
+        required,
+        requiredMessage: t('validation:required'),
+      }),
+    [hasMany, required, t],
+  )
+  const { setValue, showError, value } = useField<any>({ potentiallyStalePath: path, validate })
   const context = useIconPack()
 
   const { collectionSlug } = useDocumentInfo()
