@@ -1,0 +1,106 @@
+'use client'
+
+import { Button } from '@payloadcms/ui'
+import { useVirtualizer } from '@tanstack/react-virtual'
+import React, { useMemo, useRef } from 'react'
+
+interface IconGridProps {
+  drawerIconSize?: number
+  drawerItemsPerRow?: number
+  drawerRowHeight?: number
+  iconNames: string[]
+  icons: Record<string, React.ComponentType<any>>
+  onSelect: (name: string) => void
+  selectedNames: string[]
+}
+
+export const IconGrid: React.FC<IconGridProps> = ({
+  drawerIconSize = 24,
+  drawerItemsPerRow = 20,
+  drawerRowHeight = 80,
+  iconNames,
+  icons,
+  onSelect,
+  selectedNames,
+}) => {
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  const rows = useMemo(() => {
+    const result: string[][] = []
+    for (let i = 0; i < iconNames.length; i += drawerItemsPerRow) {
+      result.push(iconNames.slice(i, i + drawerItemsPerRow))
+    }
+    return result
+  }, [drawerItemsPerRow, iconNames])
+
+  const rowVirtualizer = useVirtualizer({
+    count: rows.length,
+    directDomUpdates: true,
+    estimateSize: () => drawerRowHeight,
+    getScrollElement: () => containerRef.current,
+    overscan: 5,
+    useFlushSync: false,
+  })
+
+  return (
+    <div
+      ref={containerRef}
+      style={{
+        height: '480px',
+        overflowX: 'hidden',
+        overflowY: 'auto',
+        paddingRight: '10px',
+      }}
+    >
+      <div
+        ref={rowVirtualizer.containerRef}
+        style={{
+          position: 'relative',
+          width: '100%',
+        }}
+      >
+        {rowVirtualizer.getVirtualItems().map((virtualRow) => {
+          const rowItems = rows[virtualRow.index]
+
+          return (
+            <div
+              data-index={virtualRow.index}
+              key={virtualRow.key}
+              ref={rowVirtualizer.measureElement}
+              style={{
+                display: 'grid',
+                gap: '8px',
+                gridTemplateColumns: `repeat(${drawerItemsPerRow}, 1fr)`,
+                height: `${virtualRow.size}px`,
+                left: 0,
+                paddingBottom: '8px',
+                position: 'absolute',
+                top: 0,
+                transform: `translateY(${virtualRow.start}px)`,
+                width: '100%',
+              }}
+            >
+              {rowItems.map((name) => {
+                const IconComponent = icons[name]
+                const isSelected = selectedNames.includes(name)
+
+                return (
+                  <Button
+                    buttonStyle={isSelected ? 'primary' : 'subtle'}
+                    key={name}
+                    margin={false}
+                    onClick={() => onSelect(name)}
+                    tooltip={name}
+                    type="button"
+                  >
+                    {IconComponent && <IconComponent size={drawerIconSize} />}
+                  </Button>
+                )
+              })}
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
