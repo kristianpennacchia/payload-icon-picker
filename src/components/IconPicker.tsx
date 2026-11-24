@@ -21,6 +21,7 @@ export const IconPicker: React.FC<{
   icons?: Record<string, React.ComponentType<any>>
   label: string
   path: string
+  required?: boolean
 }> = ({
   closeOnSelect,
   description,
@@ -28,12 +29,13 @@ export const IconPicker: React.FC<{
   drawerIconSize,
   drawerItemsPerRow,
   drawerRowHeight,
-  hasMany,
+  hasMany = false,
   icons: customIcons,
   label,
   path,
+  required = false,
 }) => {
-  const { setValue, showError, value } = useField<any>({ path })
+  const { setValue, showError, value } = useField<any>({ potentiallyStalePath: path })
   const context = useIconPack()
 
   const { collectionSlug } = useDocumentInfo()
@@ -187,7 +189,7 @@ export const IconPicker: React.FC<{
       id={`field-${path.replace(/\./g, '__')}`}
       style={{ marginBottom: '20px' }}
     >
-      <FieldLabel label={label} path={path} />
+      <FieldLabel label={label} path={path} required={required} />
       <FieldError path={path} showError={showError} />
 
       {displayMode === 'drawer' ? (

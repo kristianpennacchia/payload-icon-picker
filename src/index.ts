@@ -165,6 +165,7 @@ export const iconField = (
             drawerRowHeight,
             hasMany,
             label: label ?? (hasMany ? 'Icons' : 'Icon'),
+            required,
           },
           path: 'payload-icon-picker/client#IconPicker',
         },
@@ -244,6 +245,11 @@ export const payloadIconPicker =
                 isObject && collectionOptions.label !== undefined
                   ? collectionOptions.label
                   : pluginOptions.label,
+
+              required:
+                isObject && collectionOptions.required !== undefined
+                  ? collectionOptions.required
+                  : pluginOptions.required,
             }),
           )
         }
