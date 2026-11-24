@@ -172,15 +172,16 @@ export const iconField = (
       },
     },
     required,
-    typescriptSchema: [
-      () =>
-        hasMany
-          ? {
-              type: 'array' as const,
-              items: iconObjectSchema,
-            }
-          : iconObjectSchema,
-    ],
+    jsonSchema: {
+      fileMatch: ['payload-icon-picker://icon.json'],
+      schema: hasMany
+        ? {
+            type: 'array' as const,
+            items: iconObjectSchema,
+          }
+        : iconObjectSchema,
+      uri: 'payload-icon-picker://icon.json',
+    },
   } as JSONField
 }
 
