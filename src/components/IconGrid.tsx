@@ -4,6 +4,10 @@ import { Button } from '@payloadcms/ui'
 import { useVirtualizer } from '@tanstack/react-virtual'
 import React, { useMemo, useRef } from 'react'
 
+// Payload v4's Button no longer types upstream's 'subtle' style. The value is still passed through
+// unchanged, so this alias only records that gap for the type checker.
+type LegacyButtonStyle = React.ComponentProps<typeof Button>['buttonStyle']
+
 interface IconGridProps {
   drawerIconSize?: number
   drawerItemsPerRow?: number
@@ -86,7 +90,7 @@ export const IconGrid: React.FC<IconGridProps> = ({
 
                 return (
                   <Button
-                    buttonStyle={isSelected ? 'primary' : 'subtle'}
+                    buttonStyle={(isSelected ? 'primary' : 'subtle') as LegacyButtonStyle}
                     key={name}
                     margin={false}
                     onClick={() => onSelect(name)}

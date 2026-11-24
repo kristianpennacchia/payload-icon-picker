@@ -5,6 +5,11 @@ import type { DefaultCellComponentProps, JSONFieldClient } from 'payload'
 import { Button } from '@payloadcms/ui'
 import React from 'react'
 
+// Payload v4's Button no longer types upstream's 'subtle' style or 'xsmall' size. Both values are
+// still passed through unchanged, so these aliases only record that gap for the type checker.
+type LegacyButtonStyle = React.ComponentProps<typeof Button>['buttonStyle']
+type LegacyButtonSize = React.ComponentProps<typeof Button>['size']
+
 export const IconCell: React.FC<
   DefaultCellComponentProps<JSONFieldClient, Record<string, string> | Record<string, string>[]>
 > = ({ cellData }) => {
@@ -17,7 +22,13 @@ export const IconCell: React.FC<
       return null
     }
     return (
-      <Button buttonStyle="subtle" key={icon.name} margin={false} size="xsmall" tooltip={icon.name}>
+      <Button
+        buttonStyle={"subtle" as LegacyButtonStyle}
+        key={icon.name}
+        margin={false}
+        size={"xsmall" as LegacyButtonSize}
+        tooltip={icon.name}
+      >
         <div
           dangerouslySetInnerHTML={{ __html: icon.svg }}
           style={{
