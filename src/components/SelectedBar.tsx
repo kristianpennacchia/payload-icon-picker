@@ -17,8 +17,8 @@ export const SelectedBar: React.FC<SelectedBarProps> = ({ icons, onRemove, selec
   return (
     <div
       style={{
-        background: 'var(--theme-elevation-50)',
-        border: '1px solid var(--theme-elevation-150)',
+        background: 'var(--color-bg-secondary)',
+        border: '1px solid var(--color-border)',
         borderRadius: '6px',
         display: 'flex',
         flexDirection: 'column',

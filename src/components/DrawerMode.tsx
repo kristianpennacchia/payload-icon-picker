@@ -120,7 +120,7 @@ export const DrawerMode: React.FC<DrawerModeProps> = ({
                     key={name}
                     style={{
                       alignItems: 'center',
-                      background: 'var(--theme-elevation-100)',
+                      background: 'var(--color-bg-secondary)',
                       borderRadius: '4px',
                       display: 'flex',
                       gap: '4px',
@@ -161,10 +161,10 @@ export const DrawerMode: React.FC<DrawerModeProps> = ({
             placeholder="Search icons..."
             ref={focusSearchInput}
             style={{
-              background: 'var(--theme-input-bg)',
-              border: '1px solid var(--theme-elevation-200)',
+              background: 'var(--field-color-bg)',
+              border: '1px solid var(--field-color-border)',
               borderRadius: '4px',
-              color: 'var(--theme-text)',
+              color: 'var(--field-color-text)',
               padding: '10px',
               width: '100%',
             }}
