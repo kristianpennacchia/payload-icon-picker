@@ -1,8 +1,22 @@
-![Icon Picker Interface](./media/icon_picker_interface.png)
-
 # payload-icon-picker
 
-A field plugin for Payload CMS 3.x that adds a highly optimized icon picker. It supports both a searchable dropdown interface and an advanced grid-based sliding drawer panel. It automatically extracts and saves the selected icon name and its raw SVG string to the database, allowing you to render icons on your frontend without importing or bundling heavy icon packages.
+Fork of [payload-icon-picker](https://www.npmjs.com/package/payload-icon-picker) by Vachagan Achoyan, updated for Payload CMS v4. The original GitHub repository is no longer available; the original package remains on npm (1.5.12 for Payload 3.x).
+
+### Changes in this fork
+
+- Targets the exact Payload `4.0.0-beta.10` prerelease (`payload` and `@payloadcms/ui` peers).
+- Describes the stored icon value with Payload v4's JSON field `jsonSchema` option, replacing the removed `typescriptSchema`.
+- Validates icon values directly instead of compiling the JSON schema at runtime, so validation also works in Cloudflare Workers.
+- Uses Payload v4's field path API and passes `required` through to the field and its label.
+- Replaces Payload 3's removed `--theme-*` admin variables with v4 semantic tokens.
+
+The public imports, options and stored `{ name, svg }` value shape are unchanged from the original.
+
+**Known issue:** the list-view cell and the unselected icons in the drawer grid still pass the `subtle` button style and `xsmall` size, which Payload v4's `Button` no longer provides, so those buttons render with only the base button styling.
+
+---
+
+A field plugin for Payload CMS v4 that adds a highly optimized icon picker. It supports both a searchable dropdown interface and an advanced grid-based sliding drawer panel. It automatically extracts and saves the selected icon name and its raw SVG string to the database, allowing you to render icons on your frontend without importing or bundling heavy icon packages.
 
 ## Features
 
@@ -19,21 +33,13 @@ A field plugin for Payload CMS 3.x that adds a highly optimized icon picker. It 
 
 ## Installation
 
-Install the package in your Payload project:
+This fork is not published to npm. Install it from a release tag, which builds the package on install:
 
 ```bash
-# pnpm
-pnpm add payload-icon-picker
-
-# npm
-npm install payload-icon-picker
-
-# yarn
-yarn add payload-icon-picker
-
-# Bun
-bun add payload-icon-picker
+npm install github:kristianpennacchia/payload-icon-picker#v1.5.12-payload-v4.1
 ```
+
+It requires Node.js `^24.22.3 || >=26.13.1` and exactly `payload@4.0.0-beta.10` and `@payloadcms/ui@4.0.0-beta.10`. To vendor it instead, run `npm run build` and copy `dist/`, `package.json`, `LICENSE` and `README.md` into your project.
 
 ## Usage
 
@@ -198,7 +204,7 @@ import { IconRenderer } from 'payload-icon-picker/client'
 
 ## Database Schema
 
-When saved, the field outputs a structured object (or an array of objects if `hasMany: true`), preserving both semantic names and optimized SVG paths directly into your records:
+When saved, the field outputs a structured object (or an array of objects if `hasMany: true`), preserving both semantic names and optimized SVG paths directly into your records. Saved values must have exactly the string properties `name` and `svg`:
 
 ```json
 // Single Select Mode (hasMany: false)
@@ -232,6 +238,7 @@ When saved, the field outputs a structured object (or an array of objects if `ha
 | **`hasMany`**              | `boolean`                            | `false`     | Global fallback for multi-select.                           |
 | **`closeOnSelect`**        | `boolean`                            | `false`     | Global fallback: auto-close the drawer after selecting an icon (drawer mode, single-select only). Also settable per collection inside `collections`. |
 | **`label`**                | `string`                             | `'Icon'`    | Global fallback label.                                      |
+| **`required`**             | `boolean`                            | `false`     | Global fallback: require an icon. Also settable per collection inside `collections`. |
 | **`displayMode`**          | `'drawer'` \| `'select'`             | `'select'`  | Global fallback display mode.                               |
 | **`disabled`**             | `boolean`                            | `false`     | If true, disables the plugin.                               |
 | **`drawerItemsPerRow`**    | `number`                             | `20`        | Global fallback for number of icons per row in drawer mode. |
@@ -245,6 +252,7 @@ When saved, the field outputs a structured object (or an array of objects if `ha
 | **`name`**              | `string`                 | `'icon'`    | Field name.                             |
 | **`label`**             | `string`                 | `'Icon'`    | Field label.                            |
 | **`hasMany`**           | `boolean`                | `false`     | Enable multi-select.                    |
+| **`required`**          | `boolean`                | `false`     | Require an icon (at least one with `hasMany`). |
 | **`closeOnSelect`**     | `boolean`                | `false`     | Auto-close the drawer after selecting an icon (drawer mode, ignored when `hasMany: true`). |
 | **`description`**       | `string`                 | `undefined` | Helper text.                            |
 | **`displayMode`**       | `'drawer'` \| `'select'` | `'select'`  | Display mode.                           |
@@ -252,3 +260,15 @@ When saved, the field outputs a structured object (or an array of objects if `ha
 | **`drawerIconSize`**    | `number`                 | `24`        | Icon rendering size inside the drawer.  |
 | **`drawerRowHeight`**   | `number`                 | `80`        | Virtualized row container height.       |
 | **`admin`**             | `FieldAdmin`             | `undefined` | Standard Payload admin field config.    |
+
+## Development
+
+```bash
+npm install
+npm run build
+npm test
+```
+
+## License
+
+MIT. Original work © 2026 Vachagan Achoyan; Payload v4 changes © 2026 Kristian Pennacchia. See [LICENSE](./LICENSE).
