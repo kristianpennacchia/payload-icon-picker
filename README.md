@@ -32,13 +32,17 @@ A field plugin for Payload CMS v4 that adds a highly optimized icon picker. It s
 
 ## Installation
 
-This fork is not published to npm. Install it from a release tag, which builds the package on install:
+This fork is published as [`@kristianpennacchia/payload-icon-picker`](https://www.npmjs.com/package/@kristianpennacchia/payload-icon-picker). Install it under the original package name, `payload-icon-picker`, so the imports in this README and the admin components the field registers (`payload-icon-picker/client#…`) resolve:
 
 ```bash
-npm install github:kristianpennacchia/payload-icon-picker#v1.5.12-payload-v4.2
+# npm
+npm install payload-icon-picker@npm:@kristianpennacchia/payload-icon-picker
+
+# pnpm
+pnpm add payload-icon-picker@npm:@kristianpennacchia/payload-icon-picker
 ```
 
-It requires Node.js `^24.22.3 || >=26.13.1` and exactly `payload@4.0.0-beta.10` and `@payloadcms/ui@4.0.0-beta.10`. To vendor it instead, run `npm run build` and copy `dist/`, `package.json`, `LICENSE` and `README.md` into your project.
+It requires Node.js `^24.22.3 || >=26.13.1` and exactly `payload@4.0.0-beta.10` and `@payloadcms/ui@4.0.0-beta.10`.
 
 ## Usage
 

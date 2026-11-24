@@ -15,9 +15,9 @@ registerHooks({
   },
 })
 
-const { iconField, payloadIconPicker } = await import('payload-icon-picker')
-const client = await import('payload-icon-picker/client')
-const rsc = await import('payload-icon-picker/rsc')
+const { iconField, payloadIconPicker } = await import('@kristianpennacchia/payload-icon-picker')
+const client = await import('@kristianpennacchia/payload-icon-picker/client')
+const rsc = await import('@kristianpennacchia/payload-icon-picker/rsc')
 const { validateIconValue } = await import('../dist/validation.js')
 const React = (await import('react')).default
 const { renderToStaticMarkup } = await import('react-dom/server')
