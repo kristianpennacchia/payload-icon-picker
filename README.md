@@ -9,10 +9,9 @@ Fork of [payload-icon-picker](https://www.npmjs.com/package/payload-icon-picker)
 - Validates icon values directly instead of compiling the JSON schema at runtime, so validation also works in Cloudflare Workers.
 - Uses Payload v4's field path API and passes `required` through to the field and its label.
 - Replaces Payload 3's removed `--theme-*` admin variables with v4 semantic tokens.
+- Styles the list-view cell and unselected drawer icons with v4's `secondary` button style and `medium` size, replacing the removed `subtle` style and `xsmall` size.
 
 The public imports, options and stored `{ name, svg }` value shape are unchanged from the original.
-
-**Known issue:** the list-view cell and the unselected icons in the drawer grid still pass the `subtle` button style and `xsmall` size, which Payload v4's `Button` no longer provides, so those buttons render with only the base button styling.
 
 ---
 
@@ -36,7 +35,7 @@ A field plugin for Payload CMS v4 that adds a highly optimized icon picker. It s
 This fork is not published to npm. Install it from a release tag, which builds the package on install:
 
 ```bash
-npm install github:kristianpennacchia/payload-icon-picker#v1.5.12-payload-v4.1
+npm install github:kristianpennacchia/payload-icon-picker#v1.5.12-payload-v4.2
 ```
 
 It requires Node.js `^24.22.3 || >=26.13.1` and exactly `payload@4.0.0-beta.10` and `@payloadcms/ui@4.0.0-beta.10`. To vendor it instead, run `npm run build` and copy `dist/`, `package.json`, `LICENSE` and `README.md` into your project.

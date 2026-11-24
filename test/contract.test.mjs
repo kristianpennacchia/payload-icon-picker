@@ -1,5 +1,7 @@
 import assert from 'node:assert/strict'
-import { registerHooks } from 'node:module'
+import fs from 'node:fs/promises'
+import { createRequire, registerHooks } from 'node:module'
+import path from 'node:path'
 import test from 'node:test'
 
 // @payloadcms/ui imports its stylesheets from JavaScript; stub them so Node can load the client entry.
@@ -17,6 +19,8 @@ const { iconField, payloadIconPicker } = await import('payload-icon-picker')
 const client = await import('payload-icon-picker/client')
 const rsc = await import('payload-icon-picker/rsc')
 const { validateIconValue } = await import('../dist/validation.js')
+const React = (await import('react')).default
+const { renderToStaticMarkup } = await import('react-dom/server')
 
 const icon = { name: 'Compass', svg: '<svg viewBox="0 0 24 24"></svg>' }
 const validationArguments = { req: { t: (key) => key } }
@@ -89,4 +93,30 @@ test('required reaches the admin field from iconField and plugin options', () =>
 
   assert.equal(pagesIcon.required, true)
   assert.equal(postsIcon.required, false)
+})
+
+test('icon buttons use Button styles and sizes that Payload v4 provides', async () => {
+  const require = createRequire(import.meta.url)
+  const uiEntry = require.resolve('@payloadcms/ui')
+  const uiDist = uiEntry.slice(0, uiEntry.lastIndexOf(`${path.sep}dist${path.sep}`) + 6)
+  const buttonCSS = await fs.readFile(path.join(uiDist, 'elements/Button/index.css'), 'utf8')
+  const markup = renderToStaticMarkup(
+    React.createElement(client.IconCell, { cellData: [icon, { ...icon, name: 'Anchor' }] }),
+  )
+  const variantClasses = new Set(markup.match(/btn--(?:style|size)-[a-z-]+/g) ?? [])
+
+  assert(variantClasses.has('btn--style-secondary'))
+  assert(variantClasses.has('btn--size-medium'))
+
+  for (const className of variantClasses) {
+    assert(buttonCSS.includes(`.${className}`), `Payload v4 has no styles for ${className}.`)
+  }
+
+  const componentsDir = new URL('../dist/components/', import.meta.url)
+  for (const file of await fs.readdir(componentsDir)) {
+    if (file.endsWith('.js')) {
+      const source = await fs.readFile(new URL(file, componentsDir), 'utf8')
+      assert(!/['"](?:subtle|xsmall)['"]/.test(source), `${file} still passes a Payload 3 Button value.`)
+    }
+  }
 })
